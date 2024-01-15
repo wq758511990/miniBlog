@@ -16,3 +16,15 @@ log:
   level: debug
   format: console
   output-paths: [/tmp/miniblog.log, stdout]
+
+addr: :8080
+runMode: debug
+jwt-secret:  Rtg8BPKNEf2mB4mgvKONGPZZQSaJWNLijxR42qRgq0iBb5  # JWT 签发密钥
+
+tls:
+  addr: :8443
+  cert: ./_output/cert/server.crt
+  key: ./output/cert/server.key
+
+grpc:
+  addr: :9090

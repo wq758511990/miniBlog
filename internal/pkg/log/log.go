@@ -1,8 +1,10 @@
 package log
 
 import (
+	"context"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"myMiniBlog/internal/pkg/known"
 	"sync"
 	"time"
 )
@@ -77,6 +79,25 @@ func Sync() { std.Sync() }
 
 func (l *zapLogger) Sync() {
 	_ = l.z.Sync()
+}
+
+func C(ctx context.Context) *zapLogger {
+	return std.C(ctx)
+}
+func (l *zapLogger) C(ctx context.Context) *zapLogger {
+	lc := l.clone()
+	if requestID := ctx.Value(known.XRequestIDKey); requestID != nil {
+		lc.z = lc.z.With(zap.Any(known.XRequestIDKey, requestID))
+	}
+	if userId := ctx.Value(known.XUsernameKey); userId != nil {
+		lc.z = lc.z.With(zap.Any(known.XUsernameKey, userId))
+	}
+	return lc
+}
+
+func (l *zapLogger) clone() *zapLogger {
+	lc := *l
+	return &lc
 }
 
 // Debugw 这个Debugw是包级别的，引用了全局的std实例

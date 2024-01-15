@@ -1,0 +1,31 @@
+syntax = "proto3"; // 版本
+
+package v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = ".;proto";
+
+service MiniBlog {
+  rpc ListUser(ListUserRequest) returns (ListUserResponse) {}
+}
+
+message UserInfo {
+  string username = 1; // 这里的1，2，4，5不是默认值，而是字段标签, 其中 `19000～19999` 是保留数字。
+  string nickname = 2;
+  string email = 4;
+  string phone = 5;
+  int64 postCount = 6;
+  google.protobuf.Timestamp createdAt = 7;
+  google.protobuf.Timestamp updatedAt = 8;
+}
+
+message ListUserRequest {
+  int64 limit = 1;
+  int64 offset = 2;
+}
+
+message ListUserResponse {
+  int64 totalCount = 1;
+  repeated UserInfo users = 2;
+}
